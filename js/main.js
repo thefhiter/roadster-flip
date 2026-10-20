@@ -5,7 +5,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { Sim, makeLevel, autopilot, DEFAULT_PARAMS, PRESETS, EMPTY_INPUT, CAR } from './physics.js';
-import { buildRoadster } from './car.js';
+import { buildRoadster, applyPaint, PAINTS } from './car.js';
 import { buildWorld } from './world.js';
 import { Particles } from './fx.js';
 import { Sound } from './audio.js';
@@ -63,7 +63,7 @@ scene.add(rim);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.5, 1.0);
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.5, 1.35);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
@@ -78,7 +78,9 @@ for (const id in levels) {
   worlds[id] = buildWorld(scene, levels[id]);
   worlds[id].visible = false;
 }
-const car = buildRoadster(envMap);
+let paintName = store.get('roadster.paint', 'white');
+if (!PAINTS[paintName]) paintName = 'white';
+const car = buildRoadster(envMap, paintName);
 scene.add(car.root);
 
 let params = { ...DEFAULT_PARAMS, ...store.get('roadster.params', {}) };
@@ -302,6 +304,14 @@ for (const b of document.querySelectorAll('[data-preset]')) {
     syncSliders();
   });
 }
+for (const b of document.querySelectorAll('[data-paint]')) {
+  b.addEventListener('click', () => {
+    paintName = b.dataset.paint;
+    applyPaint(car.paint, paintName);
+    store.set('roadster.paint', paintName);
+    syncSliders();
+  });
+}
 function applyParams() {
   store.set('roadster.params', params);
   sim.setParams(params);
@@ -312,6 +322,7 @@ function syncSliders() {
     sliderEls[s.key].value = v;
     $(`sl-${s.key}-out`).textContent = s.fmt(v);
   }
+  for (const b of document.querySelectorAll('[data-paint]')) b.setAttribute('aria-pressed', String(b.dataset.paint === paintName));
   for (const b of document.querySelectorAll('[data-preset]')) {
     const p = PRESETS[b.dataset.preset];
     const match = Object.keys(p).every((k) => Math.abs(p[k] - params[k]) < 1e-6);
@@ -641,7 +652,9 @@ let acc = 0;
 let last = performance.now();
 
 function frame(now) {
-  const real = Math.min(0.1, (now - last) / 1000);
+  // rAF timestamps can precede the last reading (first frame, tab wake-up), so
+  // clamp both ways; a negative step would push the camera away and stall physics
+  const real = Math.min(0.1, Math.max(0, (now - last) / 1000));
   last = now;
   const live = state === 'play';
   const running = state === 'play' || state === 'title' || state === 'result';

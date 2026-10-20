@@ -384,6 +384,21 @@ body.muted #btn-sound .snd-off { display: block; }
 }
 .presets button:hover { border-color: var(--faint); }
 .presets button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.paints { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+.paints button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  font-size: 11px;
+  color: var(--muted);
+}
+.paints button:hover { border-color: var(--faint); }
+.paints i { width: 20px; height: 20px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
+.paints button[aria-pressed="true"] { border-color: var(--fg); color: var(--fg); }
 .sliders { display: grid; gap: 14px; }
 .slider label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
 .slider output { font: 500 12px var(--mono); color: var(--muted); }
@@ -435,6 +450,9 @@ body.muted #btn-sound .snd-off { display: block; }
     width: min(300px, calc(100vw - 2 * (var(--gutter) + 150px)));
   }
 }
+
+/* clean frame for screenshots */
+body.shot .topbar, body.shot .telemetry, body.shot .status, body.shot .callout { display: none; }
 
 /* ── state visibility ────────────────────────────────── */
 body:not([data-state="play"]) .telemetry,

@@ -145,7 +145,7 @@ function runway(x0, x1) {
   const grp = new THREE.Group();
   const red = new THREE.Mesh(
     new THREE.BoxGeometry(x1 - x0, 0.02, 0.09),
-    new THREE.MeshBasicMaterial({ color: new THREE.Color(1.5, 0.16, 0.07) }),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color(2.1, 0.22, 0.09) }),
   );
   red.position.set((x0 + x1) / 2, 0.02, TRACK_WIDTH / 2 + 0.6);
   grp.add(red);

@@ -75,6 +75,17 @@ async function waitFor(page, pred, timeout = 30000) {
   const fps = await page.evaluate(() => new Promise((res) => { let n = 0; const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else res(n / 2); }; requestAnimationFrame(f); }));
   check('renders frames', fps > 5, `${fps.toFixed(0)} fps (headless)`);
 
+  // close-up of the car model
+  await page.evaluate(() => {
+    const g = window.__game; g.start(); g.setTimeScale(0.00001);
+    const s = g.sim; window.__camOverride = { pos: [s.x + 6.2, s.y + 1.6, 5.4], look: [s.x - 0.2, s.y + 0.1, 0] };
+    document.body.classList.add('shot');
+  });
+  await sleep(900);
+  await shot(page, '00-car', 'car');
+  await page.evaluate(() => { window.__camOverride = null; document.body.classList.remove('shot'); window.__game.title(); window.__game.setTimeScale(1); });
+  await sleep(600);
+
   // slow time so headless frame pacing cannot outrun the bot
   await page.evaluate(() => window.__game.setTimeScale(0.5));
 

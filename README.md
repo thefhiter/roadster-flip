@@ -4,6 +4,8 @@ A browser stunt game in Three.js. Drive a roadster up a J-shaped ramp on suction
 
 ![Title screen](docs/title.png)
 
+![The procedural Roadster](docs/car.png)
+
 | Climb on suction | Let go and flip |
 | --- | --- |
 | ![Climbing the wall](docs/climb.png) | ![Flipping off the ceiling](docs/flip.png) |
@@ -52,13 +54,14 @@ On touch screens, on-screen pads appear (rotate on the left; let go, boost, brak
 
 ```
 js/physics.js   2D simulation (no rendering deps, unit-tested in Node)
-js/car.js       procedural roadster: extruded profile, glass canopy, wheels, 10 cold-gas jets
+js/car.js       procedural Roadster: lofted body, glass canopy, conformed decals, turbine wheels, 10 cold-gas jets
 js/world.js     scenery generated from the same Track objects the physics drives on
 js/fx.js        one pooled Points system: thruster smoke, landing dust, crash sparks
 js/audio.js     Web Audio synthesis: EV motor whine, gas hiss, wind, one-shot cues
 js/main.js      fixed-step loop, input, camera, HUD, tuning, title-screen autopilot demo
 ```
 
+- **The car** is modelled after the second-generation Tesla Roadster, built entirely in code. The body is lofted from 140 cross-sections; width, fender crown, bonnet, beltline and floor each follow a smooth curve along the length, and the wheel arches are cut by circles. Its cues include a low blunt nose with no grille, slim slanted headlights, front fenders standing above a dipped bonnet, a pinched waist, wide rear haunches and a Kamm tail with a ducktail lip. A teardrop all-glass canopy with a steeply raked windscreen is lofted separately. Headlights, wraparound tail lights, the side intake, crease, shut lines and front intake are strips ray-cast onto the body so they follow its curvature. The wheels are 12-blade turbine rims on low-profile tyres.
 - **Tracks** are turtle paths (line and arc pieces) sampled into a dense polyline, with exact positions on the arcs. Each sample carries its tangent, its normal and its curvature.
 - **On the ramp** the car is a point at arc length *s*. The normal force per unit mass is `N = v²·κ + g·n_y`. The surface can only push (`N ≥ 0`); suction lets it pull too, up to `suction × g` (2.2 g by default). When the required pull exceeds that, the car is "overpowered" and falls off. That's why the ceiling needs suction, and why releasing it drops you.
 - **In the air** the car is a rigid body (centre of mass, velocity, angle, spin). The lift thrusters push along the car's own up axis at 2.6 g, so they only slow your fall once you're right side up.
@@ -68,7 +71,7 @@ js/main.js      fixed-step loop, input, camera, HUD, tuning, title-screen autopi
 
 ### Tuning panel
 
-<kbd>T</kbd> opens live sliders for gravity, motor power, suction grip, thruster power, gas tank, time scale and glow, plus **Earth / Moon / Mars / Arcade** presets. Settings and best scores stay in `localStorage`.
+<kbd>T</kbd> opens live sliders for gravity, motor power, suction grip, thruster power, gas tank, time scale and glow, plus **Earth / Moon / Mars / Arcade** presets and four paints (**Pearl White, Multi-Coat Red, Solid Black, Midnight Silver**). Settings and best scores stay in `localStorage`.
 
 ## Tests
 
