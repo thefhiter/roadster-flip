@@ -16,6 +16,10 @@ A browser stunt game in Three.js. Drive a roadster up a J-shaped ramp on suction
 
 ## Play
 
+**Live: <https://thefhiter.github.io/roadster-flip/>**
+
+Or run it locally:
+
 ```bash
 npm start          # → http://localhost:9112
 ```
