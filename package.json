@@ -1,0 +1,12 @@
+{
+  "name": "roadster-flip",
+  "version": "1.0.0",
+  "description": "Browser stunt game: climb a J-ramp on suction, let go, flip and land a roadster on cold-gas thrusters.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/physics.test.mjs"
+  },
+  "license": "MIT"
+}
