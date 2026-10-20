@@ -29,7 +29,7 @@ async function shot(page, name, docName) {
 // Drive the game with key presses decided by the autopilot, inside the page.
 async function startBot(page, opts) {
   await page.evaluate(async (opts) => {
-    const { autopilot } = await import('/js/physics.js');
+    const { autopilot } = await import(new URL('js/physics.js', location.href).href);
     const g = window.__game;
     const map = { throttle: 'up', thrust: 'up', brake: 'down', left: 'left', right: 'right', boost: 'boost' };
     window.__botLog = [];
